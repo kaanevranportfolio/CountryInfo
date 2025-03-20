@@ -1,37 +1,47 @@
-body {
-    background-color: turquoise;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  h1, h2, h3 {
-    text-align: center;
-    color: white;
-    margin-top: 20px;
-    text-shadow: 1px 1px 2px #000;
-  }
-  
-  .clickable-card {
-    cursor: pointer;
-    transition: transform 0.2s;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .clickable-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .card {
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .card img {
-    border-radius: 8px 8px 0 0;
-  }
-  
-  .card-body {
-    text-align: center;
-  }
+/* Pagination Styling - Standard Bootstrap Look */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  margin-top: 20px;
+}
+
+.pagination .page-item {
+  margin: 0 3px;
+}
+
+.pagination .page-link {  /* Standard Bootstrap link styles */
+  color: #007bff; /* Bootstrap primary blue */
+  border: 1px solid #dee2e6; /* Light gray border */
+  border-radius: .25rem;
+  transition: all .15s ease-in-out;
+}
+
+.pagination .page-link:hover,
+.pagination .page-link:focus {
+  color: #0056b3; /* Darker blue on hover/focus */
+  background-color: #e9ecef; /* Light gray background */
+  border-color: #dee2e6;
+  text-decoration: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Subtle shadow */
+}
+
+.pagination .page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #007bff; /* Primary blue background for active */
+  border-color: #007bff;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #6c757d;
+  pointer-events: none;
+  background-color: #fff;
+  border-color: #dee2e6;
+}
+
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+  border-radius: .25rem;
+}

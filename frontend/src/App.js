@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
 import './styles/App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [allCountries, setAllCountries] = useState([]);

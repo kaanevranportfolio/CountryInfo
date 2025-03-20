@@ -44,7 +44,7 @@ function CountryCards({ countries }) {
           </Col>
         ))}
       </Row>
-      <Pagination className="justify-content-center mt-4">
+      <Pagination className="justify-content-center mt-4" >
         {Array.from({ length: Math.ceil(countries.length / itemsPerPage) }).map((_, index) => (
           <Pagination.Item
             key={index + 1}
