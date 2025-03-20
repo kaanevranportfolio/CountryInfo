@@ -1,99 +1,126 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import SearchBar from './components/SearchBar';
-import CountryCards from './components/CountryCards';
-import CountryDetail from './components/CountryDetail';
-import { Spinner } from 'react-bootstrap';
+import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
+import './styles/App.css';
 
 function App() {
-  const [countries, setCountries] = useState([]);
-  const [nameSearchTerm, setNameSearchTerm] = useState('');
-  const [regionSearchTerm, setRegionSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [allCountries, setAllCountries] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [countriesPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
+    const fetchCountries = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/countries');
-        setCountries(response.data);
+        const response = await fetch('https://restcountries.com/v3.1/all');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setAllCountries(data);
       } catch (error) {
-        console.error("Error fetching countries:", error);
-        setError("Failed to fetch country data");
-      } finally {
-        setIsLoading(false);
+        console.error('Error fetching countries:', error);
+        setError(error.message);
       }
     };
-
-    fetchData();
+    fetchCountries();
   }, []);
 
-  const clearError = () => {
-    setError(null);
-  };
+  const indexOfLastCountry = currentPage * countriesPerPage;
+  const indexOfFirstCountry = indexOfLastCountry - countriesPerPage;
 
-  const handleNameSearch = async () => {
-    clearError();
-    try {
-      const response = await axios.get(`http://localhost:3001/countries/name/${nameSearchTerm}`);
-      setCountries(response.data);
-      setNameSearchTerm(''); // Reset the name search term
-    } catch (error) {
-      console.error(`Error searching for name ${nameSearchTerm}:`, error);
-      setError("Country not found");
-    }
-  };
+  const filteredCountries = allCountries.filter(country =>
+    country.name.common.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (selectedRegion === '' || country.region === selectedRegion)
+  );
 
-  const handleRegionSearch = async () => {
-    clearError();
-    try {
-      const response = await axios.get(`http://localhost:3001/countries/region/${regionSearchTerm}`);
-      setCountries(response.data);
-      setRegionSearchTerm(''); // Reset the region search term
-    } catch (error) {
-      console.error(`Error searching for region ${regionSearchTerm}:`, error);
-      setError("Region not found or no countries in the region");
-    }
-  };
+  const currentCountries = filteredCountries.slice(indexOfFirstCountry, indexOfLastCountry);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const uniqueRegions = [...new Set(allCountries.map(country => country.region))];
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <Router>
-      <div>
-        <h1>Country Search</h1>
-
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <SearchBar
-                  nameSearchTerm={nameSearchTerm}
-                  setNameSearchTerm={setNameSearchTerm}
-                  handleNameSearch={handleNameSearch}
-                  regionSearchTerm={regionSearchTerm}
-                  setRegionSearchTerm={setRegionSearchTerm}
-                  handleRegionSearch={handleRegionSearch}
-                />
-                {isLoading ? (
-                  <div className="text-center mt-5">
-                    <Spinner animation="border" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-                  </div>
-                ) : error ? (
-                  <div className="alert alert-danger">{error}</div>
-                ) : (
-                  <CountryCards countries={countries} />
-                )}
-              </>
-            }
+      <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
+        <h1>Country List</h1>
+        <div className="filters">
+          <input
+            type="text"
+            placeholder="Search countries..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Route path="/country/:name" element={<CountryDetail countries={countries} />} />
+          <select
+            value={selectedRegion}
+            onChange={(e) => setSelectedRegion(e.target.value)}
+          >
+            <option value="">All Regions</option>
+            {uniqueRegions.map(region => (
+              <option key={region} value={region}>{region}</option>
+            ))}
+          </select>
+          <button onClick={() => setDarkMode(!darkMode)}>
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+        </div>
+        <Routes>
+          <Route path="/" element={
+            <div>
+              <div className="country-list">
+                {currentCountries.map((country, index) => (
+                  <Link key={index} to={`/country/${country.cca3}`} className="country-link">
+                    <div role="article" aria-label={`Country: ${country.name.common}`} className="country">
+                      <h2>{country.name.common}</h2>
+                      <p>Population: {country.population}</p>
+                      <p>Region: {country.region}</p>
+                      <p>Capital: {country.capital ? country.capital[0] : 'N/A'}</p>
+                      <img src={country.flags.png} alt={`Flag of ${country.name.common}`} />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              <div className="pagination">
+                {Array.from({ length: Math.ceil(filteredCountries.length / countriesPerPage) }).map((_, index) => (
+                  <button key={index} onClick={() => paginate(index + 1)}>
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
+          } />
+          <Route path="/country/:cca3" element={<CountryDetail allCountries={allCountries} />} />
         </Routes>
       </div>
     </Router>
+  );
+}
+
+function CountryDetail({ allCountries }) {
+  const { cca3 } = useParams();
+  const country = allCountries.find(country => country.cca3 === cca3);
+
+  if (!country) {
+    return <div>Country not found</div>;
+  }
+
+  return (
+    <div className="country-detail">
+      <h1>{country.name.common}</h1>
+      <img src={country.flags.png} alt={`Flag of ${country.name.common}`} />
+      <p>Population: {country.population}</p>
+      <p>Region: {country.region}</p>
+      <p>Capital: {country.capital ? country.capital[0] : 'N/A'}</p>
+      <p>Currencies: {Object.keys(country.currencies).map(code => country.currencies[code].name).join(', ')}</p>
+      <p>Languages: {Object.values(country.languages).join(', ')}</p>
+      <Link to="/">Back to List</Link>
+    </div>
   );
 }
 
