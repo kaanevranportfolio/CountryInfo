@@ -1,233 +1,43 @@
-/* styles/App.css */
+/* src/styles/App.css */
 
-.App {
-  text-align: center;
+.app {
   font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
 }
 
-.filters {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.filters input,
-.filters select {
-  padding: 5px;
-  font-size: 16px;
-}
-
 .country-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
-  margin-top: 20px;
 }
 
-.country-link {
+.country-card {
   text-decoration: none;
   color: inherit;
-}
-
-.country {
-  border: 1px solid #ccc;
-  padding: 10px;
+  border: 1px solid #ddd;
   border-radius: 5px;
-  width: 250px;
-  text-align: center;
-  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-  background-color: #f0f0f0; /* Light mode background color */
-  color: #333; /* Light mode text color */
+  overflow: hidden;
 }
 
-.dark-mode .country {
-  background-color: #ffffff; /* Dark mode background color */
-  color: #333; /* Dark mode text color */
+.country-flag img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
 }
 
-.country:hover {
-  transform: scale(1.05);
+.country-info {
+  padding: 15px;
 }
 
-.country h2 {
-  margin: 10px 0;
-  font-size: 18px;
-}
-
-.country p {
-  margin: 5px 0;
-  font-size: 14px;
-}
-
-.country img {
-  max-width: 100%;
-  height: auto;
-  margin-top: 10px;
-}
-
-.pagination { /* Overall pagination container styling */
+.country-details {
   display: flex;
-  justify-content: center; /* Center the pagination */
-  align-items: center;
-  padding: 15px 0; /* Add some padding top/bottom */
-}
-
-.pagination button {
-  margin: 0 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.dark-mode {
-  background-color: #333;
-  color: #fff;
-}
-
-.dark-mode .filters input,
-.dark-mode .filters select {
-  background-color: #444;
-  color: #fff;
-}
-
-.country-detail {
-  text-align: center;
-  margin: 20px;
-}
-
-.country-detail img {
-  max-width: 300px;
-  height: auto;
-  margin: 20px 0;
-}
-
-.country-detail p {
-  margin: 10px 0;
-  font-size: 16px;
-}
-
-.country-detail a {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 10px;
-  font-size: 16px;
-}
-
-.country-detail a:hover {
-  background-color: #0056b3;
-}/* styles/App.css */
-
-.App {
-  text-align: center;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-}
-
-.filters {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.country-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   gap: 20px;
-  margin-top: 20px;
 }
 
-.country-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.country {
-  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-  background-color: #f0f0f0; /* Light mode background color */
-  color: #333; /* Light mode text color */
-}
-
-.dark-mode .country {
-  background-color: #ffffff; /* Dark mode background color */
-  color: #333; /* Dark mode text color */
-}
-
-.country:hover {
-  transform: scale(1.05);
-}
-
-.country img {
-  max-width: 100%;
-  height: auto;
-  margin-top: 10px;
-}
-
-.pagination {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.dark-mode {
-  background-color: #333;
-  color: #fff;
-}
-
-.dark-mode .filters input,
-.dark-mode .filters select {
-  background-color: #444;
-  color: #fff;
-}
-
-.country-detail {
-  text-align: center;
-  margin: 20px;
-}
-
-.country-detail img {
-  max-width: 300px;
-  height: auto;
-  margin: 20px 0;
-}
-
-/* Override Bootstrap styles for dark mode */
-.dark-mode .card {
-  background-color: #444;
-  color: #fff;
-  border-color: #555;
-}
-
-.dark-mode .btn-secondary {
-  background-color: #555;
-  border-color: #555;
-}
-
-.dark-mode .btn-outline-primary {
-  color: #fff;
-  border-color: #fff;
-}
-
-.dark-mode .btn-outline-primary:hover {
-  background-color: #fff;
-  color: #333;
-}
-
-.dark-mode .btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-.dark-mode .btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
+.country-details .country-flag img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
 }

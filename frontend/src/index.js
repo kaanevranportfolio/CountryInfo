@@ -1,8 +1,9 @@
+// src/index.js
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './styles/styles.css'; // Import the custom CSS
 import App from './App';
+import './styles/App.css'; // Updated import path
 
 ReactDOM.render(
   <React.StrictMode>
