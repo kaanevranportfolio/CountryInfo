@@ -22,9 +22,13 @@ function CountryDetail({ countries }) {
             <br />
             <strong>Region:</strong> {country.region}
             <br />
-            <strong>Population:</strong> {country.population}
+            <strong>Population:</strong> {country.population.toLocaleString()}
             <br />
-            <strong>Area:</strong> {country.area} km²
+            <strong>Area:</strong> {country.area.toLocaleString()} km²
+            <br />
+            <strong>Currency:</strong> {Object.values(country.currencies || {}).map(currency => currency.name).join(', ')}
+            <br />
+            <strong>Languages:</strong> {Object.values(country.languages || {}).join(', ')}
           </Card.Text>
           <Button variant="primary" onClick={() => navigate(-1)}>Go Back</Button>
         </Card.Body>

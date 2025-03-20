@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SearchBar from './components/SearchBar';
 import CountryCards from './components/CountryCards';
 import CountryDetail from './components/CountryDetail';
+import { Spinner } from 'react-bootstrap';
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -29,10 +30,16 @@ function App() {
     fetchData();
   }, []);
 
+  const clearError = () => {
+    setError(null);
+  };
+
   const handleNameSearch = async () => {
+    clearError();
     try {
       const response = await axios.get(`http://localhost:3001/countries/name/${nameSearchTerm}`);
       setCountries(response.data);
+      setNameSearchTerm(''); // Reset the name search term
     } catch (error) {
       console.error(`Error searching for name ${nameSearchTerm}:`, error);
       setError("Country not found");
@@ -40,9 +47,11 @@ function App() {
   };
 
   const handleRegionSearch = async () => {
+    clearError();
     try {
       const response = await axios.get(`http://localhost:3001/countries/region/${regionSearchTerm}`);
       setCountries(response.data);
+      setRegionSearchTerm(''); // Reset the region search term
     } catch (error) {
       console.error(`Error searching for region ${regionSearchTerm}:`, error);
       setError("Region not found or no countries in the region");
@@ -68,9 +77,13 @@ function App() {
                   handleRegionSearch={handleRegionSearch}
                 />
                 {isLoading ? (
-                  <div>Loading...</div>
+                  <div className="text-center mt-5">
+                    <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                  </div>
                 ) : error ? (
-                  <div>Error: {error}</div>
+                  <div className="alert alert-danger">{error}</div>
                 ) : (
                   <CountryCards countries={countries} />
                 )}
